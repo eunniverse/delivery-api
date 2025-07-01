@@ -23,6 +23,7 @@ public class UserController {
 
     private final UserService userService;
 
+    @PostMapping("/signup")
     @Operation(
             summary = "회원가입",
             description = "ID, 비밀번호, 이름을 입력받아 회원가입을 처리합니다.",
@@ -31,7 +32,6 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "입력값 검증 실패 (형식 오류, 중복 ID 등)")
             }
     )
-    @PostMapping("/signup")
     public ResponseEntity<Void> signup(@RequestBody @Valid SignupRequest request) {
         userService.signup(request);
         return ResponseEntity.ok().build();

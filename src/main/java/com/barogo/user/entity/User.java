@@ -1,5 +1,6 @@
 package com.barogo.user.entity;
 
+import com.barogo.auth.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,10 +25,15 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status;
+
     @Builder
-    public User(String userId, String password, String name) {
+    public User(String userId, String password, String name, UserStatus status) {
         this.userId = userId;
         this.password = password;
         this.name = name;
+        this.status = status;
     }
 }

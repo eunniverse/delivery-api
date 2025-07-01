@@ -37,5 +37,33 @@ public class GlobalExceptionHandler {
                 .badRequest()
                 .body(Map.of("message", message));
     }
+
+    @ExceptionHandler(LoginFailedException.class)
+    public ResponseEntity<Map<String, String>> handleLoginFailed(LoginFailedException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(AccountInactiveException.class)
+    public ResponseEntity<Map<String, String>> handleAccountInactive(AccountInactiveException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(TokenStorageException.class)
+    public ResponseEntity<Map<String, String>> handleTokenStorage(TokenStorageException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<?> handleInvalidToken(InvalidRefreshTokenException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(ExpiredRefreshTokenException.class)
+    public ResponseEntity<?> handleExpiredToken(ExpiredRefreshTokenException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", ex.getMessage()));
+    }
 }
 

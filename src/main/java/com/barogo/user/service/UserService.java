@@ -1,5 +1,6 @@
 package com.barogo.user.service;
 
+import com.barogo.auth.enums.UserStatus;
 import com.barogo.user.dto.SignupRequest;
 import com.barogo.user.entity.User;
 import com.barogo.user.repository.UserRepository;
@@ -29,6 +30,7 @@ public class UserService {
                 .userId(request.getUserId())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
+                .status(UserStatus.ACTIVE)
                 .build();
 
         userRepository.save(user);
