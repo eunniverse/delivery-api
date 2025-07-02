@@ -6,10 +6,7 @@ import com.barogo.auth.dto.TokenResponse;
 import com.barogo.auth.entity.RefreshToken;
 import com.barogo.auth.enums.UserStatus;
 import com.barogo.auth.repository.RefreshTokenRepository;
-import com.barogo.common.exception.AccountInactiveException;
-import com.barogo.common.exception.InvalidRefreshTokenException;
-import com.barogo.common.exception.LoginFailedException;
-import com.barogo.common.exception.TokenStorageException;
+import com.barogo.common.exception.*;
 import com.barogo.common.util.JwtUtil;
 import com.barogo.user.entity.User;
 import com.barogo.user.repository.UserRepository;
@@ -78,14 +75,14 @@ public class AuthService {
         String refreshToken = request.getRefreshToken();
 
         if (refreshToken == null || refreshToken.trim().isEmpty()) {
-            throw new InvalidRefreshTokenException("RefreshToken이 누락되었습니다.");
+            throw new InvalidTokenException("RefreshToken이 누락되었습니다.");
         }
 
         RefreshToken stored = refreshTokenRepository.findByToken(refreshToken)
                 .orElseThrow(() -> new LoginFailedException("유효하지 않은 RefreshToken입니다."));
 
         if (stored.isExpired()) {
-            throw new InvalidRefreshTokenException("RefreshToken이 만료되었습니다. 다시 로그인 해주세요.");
+            throw new InvalidTokenException("RefreshToken이 만료되었습니다. 다시 로그인 해주세요.");
         }
 
         String userId = stored.getUserId();

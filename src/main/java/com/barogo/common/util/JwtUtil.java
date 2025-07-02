@@ -1,8 +1,11 @@
 package com.barogo.common.util;
 
+import com.barogo.common.exception.InvalidTokenException;
 import com.barogo.common.exception.TokenStorageException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
+import org.flywaydb.core.internal.util.StringUtils;
 import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
@@ -16,10 +19,10 @@ public class JwtUtil {
     /**
      * AccessToken 생성
      */
-    public String createAccessToken(String username) {
+    public String createAccessToken(String userId) {
         try {
             return Jwts.builder()
-                    .setSubject(username)
+                    .setSubject(userId)
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidity))
                     .signWith(key, SignatureAlgorithm.HS256)
@@ -77,5 +80,18 @@ public class JwtUtil {
         } catch (JwtException e) {
             throw new TokenStorageException("토큰 만료일자를 확인할 수 없습니다.");
         }
+    }
+
+    /**
+     * 토큰 추출
+     * @param request
+     * @return
+     */
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        throw new InvalidTokenException("Authorization 헤더가 유효하지 않습니다.");
     }
 }
