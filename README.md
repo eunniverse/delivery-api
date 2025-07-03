@@ -67,3 +67,10 @@ kakao:
 | H2    | 개발 편의성 및 빠른 테스트 | 별도의 DB 설치나 설정 없이도 즉시 실행 가능. 프로젝트 초기 개발 시 반복적인 쿼리 작업 없이 빠르게 확인 가능 |
 | MySQL | 운영 환경           | 실제 배포 및 운영을 위한 데이터베이스로 Flyway를 통해 마이그레이션 관리됨                    |
 
+---
+## Swagger API 문서
+해당 프로젝트는 Swagger(OpenAPI)를 통해 API 명세를 제공합니다.
+
+로컬 실행 시: http://localhost:8080/swagger-ui/index.html
+
+SpringDoc 기반으로 자동 생성됩니다. API 요청 테스트 및 명세 확인이 가능합니다.
