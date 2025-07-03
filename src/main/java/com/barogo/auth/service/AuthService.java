@@ -52,10 +52,10 @@ public class AuthService {
             String refreshToken = UUID.randomUUID().toString();
             LocalDateTime expiryDate = LocalDateTime.now().plusDays(REFRESH_TOKEN_VALID_DAYS);
 
-            refreshTokenRepository.findByUserId(user.getUserId())
+            refreshTokenRepository.findById(user.getId())
                     .ifPresentOrElse(
                             existing -> existing.update(refreshToken, expiryDate),
-                            () -> refreshTokenRepository.save(new RefreshToken(user.getUserId(), refreshToken, expiryDate))
+                            () -> refreshTokenRepository.save(new RefreshToken(user.getId(), refreshToken, expiryDate))
                     );
 
             return new TokenResponse(accessToken, refreshToken);
@@ -85,12 +85,12 @@ public class AuthService {
             throw new InvalidTokenException("RefreshToken이 만료되었습니다. 다시 로그인 해주세요.");
         }
 
-        String userId = stored.getUserId();
-        userRepository.findByUserId(userId)
+        Long userId = stored.getUserId();
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new LoginFailedException("존재하지 않는 사용자입니다."));
 
         try {
-            String newAccessToken = jwtUtil.createAccessToken(userId);
+            String newAccessToken = jwtUtil.createAccessToken(user.getUserId());
             String newRefreshToken = UUID.randomUUID().toString();
             LocalDateTime newExpiryDate = LocalDateTime.now().plusDays(REFRESH_TOKEN_VALID_DAYS);
 

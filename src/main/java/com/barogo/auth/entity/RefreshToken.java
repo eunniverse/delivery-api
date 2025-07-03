@@ -15,7 +15,7 @@ public class RefreshToken {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String userId;
+    private Long userId;
 
     @Column(nullable = false)
     private String token;
@@ -23,7 +23,7 @@ public class RefreshToken {
     @Column(nullable = false)
     private LocalDateTime expiryDate;
 
-    public RefreshToken(String userId, String token, LocalDateTime expiryDate) {
+    public RefreshToken(Long userId, String token, LocalDateTime expiryDate) {
         this.userId = userId;
         this.token = token;
         this.expiryDate = expiryDate;
