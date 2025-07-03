@@ -1,4 +1,4 @@
-package com.barogo.common.util;
+package com.barogo.common.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

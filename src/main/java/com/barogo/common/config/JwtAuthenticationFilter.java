@@ -1,5 +1,6 @@
-package com.barogo.common.util;
+package com.barogo.common.config;
 
+import com.barogo.common.util.JwtUtil;
 import com.barogo.user.entity.User;
 import com.barogo.user.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;

@@ -1,5 +1,6 @@
-package com.barogo.common.util;
+package com.barogo.common.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +32,12 @@ public class SecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            // 인증 실패 시 401로 응답
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "인증 정보가 없습니다.");
+                        })
                 )
                 .formLogin(login -> login.disable())
                 .httpBasic(basic -> basic.disable())

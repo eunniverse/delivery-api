@@ -2,7 +2,7 @@
 ALTER TABLE users ADD COLUMN IF NOT EXISTS status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE';
 
 -- refresh_tokens 테이블 user_id 형 변경
-ALTER TABLE refresh_tokens DROP FOREIGN KEY refresh_tokens_ibfk_1;
+ALTER TABLE refresh_tokens DROP CONSTRAINT IF EXISTS refresh_tokens_ibfk_1;
 
 ALTER TABLE refresh_tokens MODIFY COLUMN user_id VARCHAR(50) NOT NULL;
 

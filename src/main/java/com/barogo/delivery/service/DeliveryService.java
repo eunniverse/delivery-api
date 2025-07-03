@@ -70,7 +70,7 @@ public class DeliveryService {
         Page<Delivery> deliveries = deliveryRepository.searchDeliveries(user, req, pageable);
 
         if (deliveries.isEmpty()) {
-            throw new InvalidRequestException("해당 조건에 맞는 배달 내역이 존재하지 않습니다.");
+            return Page.empty();
         }
 
         return deliveries.map(DeliveryResponse::fromEntity);

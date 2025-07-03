@@ -18,6 +18,8 @@ public class JwtUtil {
 
     /**
      * AccessToken 생성
+     * @param userId
+     * @return
      */
     public String createAccessToken(String userId) {
         try {
@@ -34,6 +36,8 @@ public class JwtUtil {
 
     /**
      * 토큰 유효성 검증
+     * @param token
+     * @return
      */
     public boolean validateToken(String token) {
         try {
@@ -51,6 +55,8 @@ public class JwtUtil {
 
     /**
      * 토큰에서 사용자 ID 추출
+     * @param token
+     * @return
      */
     public String extractUserId(String token) {
         try {
@@ -63,22 +69,6 @@ public class JwtUtil {
             return claims.getSubject();
         } catch (JwtException e) {
             throw new TokenStorageException("토큰에서 사용자 ID를 추출할 수 없습니다.");
-        }
-    }
-
-    /**
-     * 토큰 만료 시간 추출
-     */
-    public Date getExpiration(String token) {
-        try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody()
-                    .getExpiration();
-        } catch (JwtException e) {
-            throw new TokenStorageException("토큰 만료일자를 확인할 수 없습니다.");
         }
     }
 

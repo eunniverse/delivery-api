@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseEntity<String> handleInvalidRequest(InvalidRequestException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }
 
