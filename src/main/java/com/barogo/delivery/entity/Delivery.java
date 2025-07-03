@@ -1,5 +1,6 @@
 package com.barogo.delivery.entity;
 
+import com.barogo.common.exception.InvalidRequestException;
 import com.barogo.delivery.enums.DeliveryStatus;
 import com.barogo.user.entity.User;
 import jakarta.persistence.*;
@@ -39,5 +40,12 @@ public class Delivery {
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public void updateAddress(String newAddress) {
+        if (newAddress == null || newAddress.isBlank()) {
+            throw new InvalidRequestException("변경할 주소가 유효하지 않습니다.");
+        }
+        this.address = newAddress;
     }
 }

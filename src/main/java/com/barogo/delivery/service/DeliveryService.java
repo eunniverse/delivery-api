@@ -4,6 +4,7 @@ import com.barogo.common.exception.InvalidRequestException;
 import com.barogo.common.exception.LoginFailedException;
 import com.barogo.delivery.dto.DeliveryResponse;
 import com.barogo.delivery.dto.DeliverySearchRequest;
+import com.barogo.delivery.dto.UpdateAddressRequest;
 import com.barogo.delivery.entity.Delivery;
 import com.barogo.delivery.enums.DeliveryStatus;
 import com.barogo.delivery.repository.DeliveryRepository;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -28,6 +28,7 @@ public class DeliveryService {
 
     private final DeliveryRepository deliveryRepository;
     private final UserRepository userRepository;
+    private final RegionValidationService regionValidationService;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public Page<DeliveryResponse> getDeliveries(String userId, DeliverySearchRequest req) {
@@ -73,5 +74,24 @@ public class DeliveryService {
         }
 
         return deliveries.map(DeliveryResponse::fromEntity);
+    }
+
+    public void updateDeliveryAddress(Long deliveryId, UpdateAddressRequest request) {
+        Delivery delivery = deliveryRepository.findById(deliveryId)
+                .orElseThrow(() -> new InvalidRequestException("해당 배달 내역이 존재하지 않습니다."));
+
+        if (delivery.isDeleted()) {
+            throw new InvalidRequestException("삭제된 배달 건은 수정할 수 없습니다.");
+        }
+
+        if (delivery.getStatus() != DeliveryStatus.PENDING) {
+            throw new InvalidRequestException("배달이 접수 상태일 때만 주소를 변경할 수 있습니다.");
+        }
+
+        // 지역 비교 (외부 API 활용)
+        regionValidationService.validateAddressChange(delivery.getAddress(), request.getNewAddress());
+
+        delivery.updateAddress(request.getNewAddress());
+        deliveryRepository.save(delivery);
     }
 }
